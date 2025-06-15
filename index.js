@@ -1,58 +1,33 @@
-const express = require('express');
-const app = express();
-const User = require('./models/user');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+$(document).ready(function () {
+  $("a#pageLink").click(function () {
+    $("a#pageLink").removeClass("active");
+    $(this).addClass("active");
+  });
+  
+  $(".btn-show-left-area").click(function () {
+    $(".left-area").removeClass("show");
+    $(".left-area").addClass("show");
+  });
+  
+  $(".btn-show-right-area").click(function () {
+    $(".right-area").removeClass("show");
+    $(".right-area").addClass("show");
+  });
+  
+  $(".btn-close-right").click(function () {
+    $(".right-area").removeClass("show");
+  });
+  
+  $(".btn-close-left").click(function () {
+    $(".left-area").removeClass("show");
+  });
+});
 
-mongoose.connect('mongodb://127.0.0.1:27017/authDemo');
-
-
-app.set('view engine', 'ejs');
-app.set('views', 'views');
-
-app.use(express.urlencoded({extended: true}));
-
-app.get('/', (req, res) => {
-    res.send('HOME')
-})
-
-app.get('/register', (req, res) => {
-    res.render('register')
-})
-
-app.post('/register', async (req,res) => {
-    const { password, username } = req.body;
-    const hash = await bcrypt.hash(password,12);
-    const user = new User({
-        username,
-        password: hash
-    })
-
-    await user.save();
-    res.redirect('/')
-})
-
-app.get('/login', (req, res) => {
-    res.render('login')
-})
-app.post('/login', async(req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    const validPassword = await bcrypt.compare(password, username)
-    if (validPassword){
-        res.send("WELCOME")
+$('.main-area').scroll( function() {
+    if ($('.main-area').scrollTop() >= 88) {
+       $('div.main-area-header').addClass('fixed');
     }
-    else{
-        res.send("try again")
-
+    else {
+       $('div.main-area-header').removeClass('fixed');
     }
-})
-
-app.get('/secret', (req,res) => {
-    res.send('THIS IS A SECRET')
-})
-
-
-app.listen (3000, () => {
-    console.log("SERVER ON")
-})
+});
